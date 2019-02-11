@@ -76,6 +76,9 @@ export default {
     async watchClient () {
       try {
         this.balances = await client.getBalances(this.address)
+        if (this.token === '') {
+          this.token = this.balances[0].id
+        }
       } finally {
         await sleep(1000)
         this.watchClient()
