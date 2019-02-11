@@ -96,8 +96,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+input {
+  width: 99%;
+}
+
 .scan-input {
-  width: 93%;
+  width: 90%;
 }
 
 .scan-icon {
