@@ -1,5 +1,23 @@
 const PlasmaCore = require('plasma-core')
+const utils = require('plasma-utils')
+const models = utils.serialization.models
+const UnsignedTransaction = models.UnsignedTransaction
+import BigNum from 'bn.js'
 import IndexedDBProvider from './indexed-db-provider'
+
+const TOKENS = {
+  '0': 'ETH'
+}
+
+/**
+ * Converts a value to a hex string.
+ * @param {*} value Value to convert.
+ * @return {string} Value as a hex string.
+ */
+const toHexString = (value) => {
+  return new BigNum(value).toString('hex')
+}
+
 
 const defaultOptions = {
   dbProvider: IndexedDBProvider,
@@ -21,6 +39,7 @@ class PlasmaClient {
    * Starts the node.
    */
   async start () {
+    if (this.started) return
     this.started = true
     await this.core.start()
   }
@@ -32,6 +51,70 @@ class PlasmaClient {
     this.started = false
     await this.core.stop()
   }
+
+  async getAddress() {
+    if (this.address) return this.address
+
+    const accounts = await this.core.services.wallet.getAccounts()
+    if (accounts.length === 0) {
+      const account = await this.core.services.wallet.createAccount()
+      accounts.push(account)
+    }
+    this.address = accounts[0]
+    return accounts[0]
+  }
+
+  async getBalances(address) {
+    const balances = await this.core.services.chain.getBalances(address)
+    const parsed = []
+    for (const token in balances) {
+      const tokenName = TOKENS[token] || token
+      parsed.push({
+        id: token,
+        token: tokenName,
+        balance: balances[token].toString()
+      })
+    }
+    return parsed
+  }
+
+  async getCurrentBlock () {
+    return this.core.services.contract.getCurrentBlock()
+  }
+
+  async getLastSyncedBlock () {
+    return this.core.services.chaindb.getLatestBlock()
+  }
+
+  async sendTransaction (from, to, token, amount) {
+    token = toHexString(token)
+    amount = toHexString(amount)
+
+    const ranges = await this.core.services.chain.pickRanges(from, token, amount)
+    const nextBlock = await this.core.services.operator.getNextBlock()
+    const transaction = {
+      block: nextBlock,
+      transfers: ranges.map((range) => {
+        return {
+          ...range,
+          ...{ sender: from, recipient: to }
+        }
+      })
+    }
+    const hash = new UnsignedTransaction(transaction).hash
+    const signature = await this.core.services.wallet.sign(from, hash)
+    transaction.signatures = ranges.map(() => {
+      return signature
+    })
+    return this.core.services.chain.sendTransaction(transaction)
+  }
 }
 
-export default PlasmaClient
+const clientOptions = {
+  finalityDepth: 0,
+  debug: 'service:*',
+  ethereumEndpoint: 'https://rinkeby.infura.io/v3/fce31f1fb2d54caa9b31ed7d28437fa5',
+}
+const client = new PlasmaClient(clientOptions)
+
+export default client

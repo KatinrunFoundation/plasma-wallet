@@ -23,6 +23,11 @@ body, html {
   font-family: 'Roboto'
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 
 /* Mixins */
 @mixin transitions($time) {
@@ -58,8 +63,51 @@ body, html {
   float: right;
 }
 
+.margin-bottom-sm {
+  margin-bottom: 10px;
+}
+
+.rainbow-background {
+  background: linear-gradient(to right, gold, aquamarine, crimson, orchid, blue);
+  background-size: 200% 200%;
+
+  animation: rainbow 2s ease-in-out infinite;
+  transition: color .2s ease-in-out;
+}
+
+.rainbow-text {
+  @extend .rainbow-background;
+
+  color: rgba(0, 0, 0, 0);
+
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
 
 /* Components */
+.container {
+  position: relative;
+  padding: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media screen and (min-width: 48em) {
+  .container {
+    width: 750px;
+  }
+}
+@media screen and (min-width: 64em) {
+  .container {
+    width: 970px;
+  }
+}
+@media screen and (min-width: 80em) {
+  .container {
+    width: 1170px;
+  }
+}
+
 .card {
   @include round(3px);
   @extend .shadow-1;
@@ -94,5 +142,77 @@ body, html {
   
   .info-label {
     font-weight: bold;
+  }
+}
+
+.btn {
+  @include round(3px);
+  @include transitions(200ms);
+  @extend .shadow-1;
+
+  width: 100%;
+  display: block;
+  height: 28px;
+  line-height: 28px;
+  font-size: 18px;
+  text-align: center;
+  text-transform: uppercase;
+  border: 1px solid black;
+  background-color: #FBFBFB;
+
+  &.btn-half {
+    width: calc(46% - 2px);
+    margin: 0 2%;
+    display: inline-block;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.mobile-sub-header {
+  @extend .rainbow-text;
+
+  font-size: 12px;
+  text-transform: uppercase;
+
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+  height: 28px;
+  line-height: 28px;
+
+  padding: 0 15px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.top-bar {
+  text-align: center;
+  font-size: 12px;
+  font-family: 'Roboto Mono';
+
+  background-color: #FBFBFB;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+  height: 29px;
+  line-height: 29px;
+}
+
+.input-field {
+  margin-bottom: 15px;
+
+  label {
+    display: block;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-family: 'Roboto Mono';
+  }
+
+  input {
+    width: 100%;
   }
 }

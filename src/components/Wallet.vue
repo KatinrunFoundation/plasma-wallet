@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div class="address-bar">{{ address }}</div>
+    <div class="top-bar">{{ address }}</div>
+    <div class="top-bar margin-bottom-sm">sync progress: {{ synced }} / {{ latest }}</div>
+
     <div class="mobile-sub-header">Balances</div>
     <div class="card text-center" v-if="balances.length === 0">
       You don't have any tokens!
@@ -10,110 +12,51 @@
         {{ item.token }} <div class="right">{{ item.balance }}</div>
       </div>
     </div>
+
+    <div class="card">
+      <router-link class="btn btn-half" to="/send">Send</router-link>
+      <router-link class="btn btn-half" to="/receive">Receive</router-link>
+    </div>
   </div>
 </template>
 
 <script>
-import PlasmaClient from '../services/plasma-client'
+import client from '../services/plasma-client'
 
-const TOKENS = {
-  '0': 'ETH'
+const sleep = async (ms) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
 }
-
-const clientOptions = {
-  finalityDepth: 0,
-  debug: 'service:*',
-  ethereumEndpoint: 'https://rinkeby.infura.io/v3/fce31f1fb2d54caa9b31ed7d28437fa5',
-}
-const client = new PlasmaClient(clientOptions)
 
 export default {
   name: 'Wallet',
   data () {
     return {
       address: undefined,
-      balances: []
+      balances: [],
+      latest: 0,
+      synced: 0
     }
   },
-  beforeCreate() {
+  beforeCreate () {
     (async () => {
       await client.start()
-      this.address = await this.getAccount()
-      this.balances = await this.getBalances(this.address)
+      this.address = await client.getAddress()
+      this.watchClient()
     })()
   },
   methods: {
-    async getAccount() {
-      const accounts = await client.core.services.wallet.getAccounts()
-      if (accounts.length === 0) {
-        const account = await client.core.services.wallet.createAccount()
-        accounts.push(account)
+    async watchClient () {
+      try {
+        this.balances = await client.getBalances(this.address)
+        this.latest = await client.getCurrentBlock()
+        this.synced = await client.getLastSyncedBlock()
+      } finally {
+        await sleep(1000)
+        this.watchClient()
       }
-      return accounts[0]
-    },
-    async getBalances(address) {
-      const balances = await client.core.services.chain.getBalances(address)
-      const parsed = []
-      for (const token in balances) {
-        const tokenName = TOKENS[token] || token
-        parsed.push({
-          token: tokenName,
-          balance: balances[token].toString()
-        })
-      }
-      return parsed
     }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.rainbow-background {
-  background: linear-gradient(to right, gold, aquamarine, crimson, orchid, blue);
-  background-size: 200% 200%;
-
-  animation: rainbow 2s ease-in-out infinite;
-  transition: color .2s ease-in-out;
-}
-
-.rainbow-text {
-  @extend .rainbow-background;
-
-  color: rgba(0, 0, 0, 0);
-
-  background-clip: text;
-  -webkit-background-clip: text;
-}
-
-.address-bar {
-  text-align: center;
-  font-size: 12px;
-  font-family: 'Roboto Mono';
-
-  background-color: #FBFBFB;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-
-  height: 29px;
-  line-height: 29px;
-
-  margin-bottom: 10px;
-}
-
-.mobile-sub-header {
-  @extend .rainbow-text;
-
-  font-size: 12px;
-  text-transform: uppercase;
-
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-
-  height: 28px;
-  line-height: 28px;
-
-  padding: 0 15px;
-  margin-bottom: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-</style>
