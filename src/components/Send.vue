@@ -98,6 +98,8 @@ export default {
 <style lang="scss" scoped>
 input {
   width: 99%;
+  -webkit-appearance: none;
+  border: 1px solid rgb(169, 169, 169);
 }
 
 .scan-input {
