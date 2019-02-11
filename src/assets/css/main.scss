@@ -34,6 +34,7 @@ input, select {
   box-sizing: border-box;
   border: 1px solid rgb(169, 169, 169);
   padding: 2px;
+  font-size: 16px;
 }
 
 /* Mixins */
@@ -197,8 +198,8 @@ input, select {
 
   &.btn-small {
     font-size: 12px;
-    height: 19px;
-    line-height: 19px
+    height: 24px;
+    line-height: 24px
   }
 
   &:hover,

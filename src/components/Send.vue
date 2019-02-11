@@ -101,8 +101,8 @@ export default {
 }
 
 .scan-icon {
-  height: 21px;
-  line-height: 21px;
+  height: 24px;
+  line-height: 24px;
   width: 5%;
   float: right;
   text-align: center;
