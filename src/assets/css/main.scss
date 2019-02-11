@@ -1,0 +1,98 @@
+/* Fonts */
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('../fonts/RobotoMono-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-Regular.ttf');
+}
+
+/* Global Styles */
+body, html {
+  padding: 0;
+  margin: 0;
+  background-color: #FBFBFB;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  scroll-behavior: smooth;
+
+  font-family: 'Roboto'
+}
+
+
+/* Mixins */
+@mixin transitions($time) {
+  -webkit-transition: all $time ease;
+  -moz-transition: all $time ease;
+  -ms-transition: all $time ease;
+  -o-transition: all $time ease;
+  transition: all $time ease;
+}
+  
+@mixin round($radius) {
+  border-radius: $radius;
+}
+
+/* Utilities */
+.shadow-1 {
+  -webkit-box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.01), 0 1px 10px 0 rgba(0, 0, 0, 0.01), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.01), 0 1px 10px 0 rgba(0, 0, 0, 0.01), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.ellipsis {
+  overflow: hidden;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.right {
+  float: right;
+}
+
+
+/* Components */
+.card {
+  @include round(3px);
+  @extend .shadow-1;
+
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px;
+
+  position: relative;
+
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+
+  &.link-card {
+    @include transitions(200ms);
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  div {
+    @extend .ellipsis;
+  }
+
+  .main-info {
+    margin-bottom: 10px;
+  }
+  
+  .info-label {
+    font-weight: bold;
+  }
+}

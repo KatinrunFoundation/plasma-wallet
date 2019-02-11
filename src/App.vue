@@ -1,28 +1,25 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Wallet />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+require('@/assets/css/main.scss')
+
+import Wallet from './components/Wallet.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
-  }
+    Wallet
+  },
+  metaInfo: {
+    title: 'Plasma Burner Wallet',
+    meta: [
+      { charset: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+    ]
+  },
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
