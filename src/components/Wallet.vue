@@ -14,7 +14,7 @@
     </div>
 
     <div class="card" v-if="!depositing && !exiting">
-      <button class="btn btn-half btn-small" :disabled="ethBalance === 0" v-on:click="startDeposit()"><font-awesome-icon icon="arrow-down" /> Deposit <font-awesome-icon icon="arrow-down" /></button>
+      <button class="btn btn-half btn-small" :disabled="ethBalance === '0'" v-on:click="startDeposit()"><font-awesome-icon icon="arrow-down" /> Deposit <font-awesome-icon icon="arrow-down" /></button>
       <button class="btn btn-half btn-small" :disabled="balances.length === 0" v-on:click="startExit()"><font-awesome-icon icon="arrow-up" /> Withdraw <font-awesome-icon icon="arrow-up" /></button>
     </div>
 
@@ -51,8 +51,8 @@
     </div>
 
     <div class="card bottom">
-      <router-link class="btn btn-half" to="/send">Send</router-link>
-      <router-link class="btn btn-half" to="/receive">Receive</router-link>
+      <router-link tag="button" class="btn btn-half" to="/send" :disabled="balances.length === 0">Send</router-link>
+      <router-link tag="button" class="btn btn-half" to="/receive">Receive</router-link>
     </div>
   </div>
 </template>
@@ -74,7 +74,7 @@ export default {
       balances: [],
       latest: 0,
       synced: 0,
-      ethBalance: 0,
+      ethBalance: '0',
       amount: '',
       depositing: false,
       exiting: false,
