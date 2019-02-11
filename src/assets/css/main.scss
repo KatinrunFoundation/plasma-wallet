@@ -30,14 +30,22 @@ a {
 
 
 /* Mixins */
+@mixin transition($type, $time) {
+  -webkit-transition: $type $time ease;
+  -moz-transition: $type $time ease;
+  -ms-transition: $type $time ease;
+  -o-transition: $type $time ease;
+  transition: $type $time ease;
+}
+
 @mixin transitions($time) {
-  -webkit-transition: all $time ease;
-  -moz-transition: all $time ease;
-  -ms-transition: all $time ease;
-  -o-transition: all $time ease;
-  transition: all $time ease;
+  @include transition(all, $time);
 }
   
+@mixin bgtransitions($time) {
+  @include transition(background-color, $time);
+}
+
 @mixin round($radius) {
   border-radius: $radius;
 }
@@ -84,6 +92,10 @@ a {
   -webkit-background-clip: text;
 }
 
+.bottom {
+  position: fixed !important;
+  bottom: 0;
+}
 
 /* Components */
 .container {
@@ -132,6 +144,10 @@ a {
     }
   }
 
+  &.bottom {
+    width: calc(100% - 50px);
+  }
+
   div {
     @extend .ellipsis;
   }
@@ -147,7 +163,7 @@ a {
 
 .btn {
   @include round(3px);
-  @include transitions(200ms);
+  @include bgtransitions(200ms);
   @extend .shadow-1;
 
   width: 100%;
@@ -166,9 +182,26 @@ a {
     display: inline-block;
   }
 
+  &.btn-third {
+    width: calc(33% - 2px);
+    margin: 0 2%;
+    display: inline-block;
+  }
+
+  &.btn-small {
+    font-size: 12px;
+    height: 19px;
+    line-height: 19px
+  }
+
   &:hover,
   &:focus {
     background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  &:disabled {
+    color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.03);
   }
 }
 
@@ -188,6 +221,17 @@ a {
   margin-bottom: 10px;
   margin-left: 10px;
   margin-right: 10px;
+}
+
+.send-input {
+  width: 48%;
+}
+
+.send-btn-container {
+  float: right;
+  width: 50%;
+  display: inline-block;
+  overflow: inherit !important;
 }
 
 .top-bar {

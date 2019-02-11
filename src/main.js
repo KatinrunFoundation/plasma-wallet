@@ -7,7 +7,7 @@ import Router from 'vue-router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 // Font Awesome icons.
-import { faQrcode, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faQrcode, faTimes, faArrowUp, faArrowDown, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 // External components.
 import VueQrcode from '@chenfengyuan/vue-qrcode'
@@ -29,6 +29,9 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 library.add(faQrcode)
 library.add(faTimes)
+library.add(faArrowUp)
+library.add(faArrowDown)
+library.add(faSpinner)
 
 Vue.config.productionTip = false
 

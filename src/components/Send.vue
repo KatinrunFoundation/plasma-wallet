@@ -5,6 +5,7 @@
       <div class="mobile-sub-header">Send to Address</div>
 
       <div class="container">
+        <font-awesome-icon class="back-btn" icon="times" v-on:click="back()" />
         <div class="input-field">
           <label>Token to Send</label>
           <select v-model="token">
@@ -83,6 +84,9 @@ export default {
     async sendTransaction () {
       await client.sendTransaction(this.address, this.recipient, this.token, this.amount)
       this.$router.push('/')
+    },
+    back () {
+      this.$router.go(-1)
     }
   }
 }
@@ -112,6 +116,12 @@ export default {
   top: 10px;
   right: 10px;
   font-size: 25px;
+}
+
+.back-btn {
+  position: absolute;
+  right: 10px;
+  top: 0px;
 }
 
 select {

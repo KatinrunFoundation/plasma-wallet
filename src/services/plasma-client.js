@@ -86,6 +86,10 @@ class PlasmaClient {
     return this.core.services.chaindb.getLatestBlock()
   }
 
+  async getEthBalance (address) {
+    return this.core.services.web3.eth.getBalance(address)
+  }
+
   async sendTransaction (from, to, token, amount) {
     token = toHexString(token)
     amount = toHexString(amount)
@@ -107,6 +111,24 @@ class PlasmaClient {
       return signature
     })
     return this.core.services.chain.sendTransaction(transaction)
+  }
+
+  async deposit (address, token, amount) {
+    token = toHexString(token)
+    amount = toHexString(amount)
+
+    return this.core.services.contract.deposit(token, amount, address)
+  }
+
+  async exit (address, token, amount) {
+    token = toHexString(token)
+    amount = toHexString(amount)
+
+    return this.core.services.chain.startExit(address, token, amount)
+  }
+
+  async finalizeExits (address) {
+    return this.core.services.chain.finalizeExits(address)
   }
 }
 
