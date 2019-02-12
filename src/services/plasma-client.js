@@ -130,11 +130,23 @@ class PlasmaClient {
   async finalizeExits (address) {
     return this.core.services.chain.finalizeExits(address)
   }
+
+  async getExits (address) {
+    const exits = await this.core.services.chain.getExitsWithStatus(address)
+    for (const exit of exits) {
+      exit.tokenName = TOKENS[exit.token] || exit.token
+    }
+    return exits
+  }
+
+  async getCurrentEthBlock () {
+    return this.core.services.web3.eth.getBlockNumber()
+  }
 }
 
 const clientOptions = {
   finalityDepth: 0,
-  debug: 'service:*',
+  debug: 'service:*, debug:*',
   ethereumEndpoint: 'https://rinkeby.infura.io/v3/fce31f1fb2d54caa9b31ed7d28437fa5',
 }
 const client = new PlasmaClient(clientOptions)

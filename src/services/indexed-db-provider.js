@@ -1,9 +1,7 @@
 const { openDb } = require('idb')
-const AsyncLock = require('async-lock')
 
 class IndexedBProvider {
   constructor () {
-    this.lock = new AsyncLock()
     this.dbname = 'test-store'
     this.store = 'chain'
   }
@@ -27,7 +25,7 @@ class IndexedBProvider {
 
   async _openDb () {
     return openDb(this.dbname, 1, upgradeDB => {
-      upgradeDB.createObjectStore(this.store);
+      upgradeDB.createObjectStore(this.store)
     })
   }
 
@@ -41,7 +39,7 @@ class IndexedBProvider {
       }
     }
   
-    const result = await this.db.transaction(this.store).objectStore(this.store).get(key);
+    const result = await this.db.transaction(this.store).objectStore(this.store).get(key)
     return this._isJson(result) ? JSON.parse(result) : result
   }
 
@@ -50,24 +48,46 @@ class IndexedBProvider {
       value = JSON.stringify(value)
     }
 
-    return this.lock.acquire(key, () => {
-      const tx = this.db.transaction(this.store, 'readwrite');
-      tx.objectStore(this.store).put(value, key);
-      return tx.complete;
-    })
+    const tx = this.db.transaction(this.store, 'readwrite')
+    tx.objectStore(this.store).put(value, key)
+    await tx.complete
   }
 
   async delete (key) {
-    return this.lock.acquire(key, () => {
-      const tx = this.db.transaction(this.store, 'readwrite');
-      tx.objectStore(this.store).delete(key);
-      return tx.complete;
-    })
+    const tx = this.db.transaction(this.store, 'readwrite')
+    tx.objectStore(this.store).delete(key)
+    return tx.complete
   }
 
   async exists (key) {
-    const count = await this.db.transaction(this.store).objectStore(this.store).count(key);
+    const count = await this.db.transaction(this.store).objectStore(this.store).count(key)
     return count !== 0
+  }
+
+  async findNextKey (key) {
+    const prefix = key.split(':')[0]
+    const tx = this.db.transaction(this.store)
+    let result = undefined
+    tx.objectStore(this.store).iterateKeyCursor((cursor) => {
+      if (result || !cursor) return
+      if (cursor.key.startsWith(prefix) && cursor.key > key) {
+        result = cursor.key
+      }
+      cursor.continue()
+    })
+    await tx.complete
+    return result || key
+  }
+
+  async bulkPut (objects) {
+    const tx = this.db.transaction(this.store, 'readwrite')
+    for (const object of objects) {
+      if (!(object.value instanceof String || typeof object.value === 'string')) {
+        object.value = JSON.stringify(object.value)
+      }
+      tx.objectStore(this.store).put(object.value, object.key)
+    }
+    return tx.complete
   }
 
   /**

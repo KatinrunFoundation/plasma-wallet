@@ -51,6 +51,17 @@
       </div>
     </div>
 
+    <div v-if="exits.length > 0">
+      <div class="mobile-sub-header">Pending Withdrawals</div>
+      <div class="exits">
+        <div class="card" v-for="exit in exits" :key="exit.id">
+          <div class="main-info">
+            {{ exit.end.sub(exit.start).toString(10) }} {{ exit.tokenName }} <div class="right">{{ exit.timeLeft }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="card bottom">
       <router-link tag="button" class="btn btn-half" to="/send" :disabled="balances.length === 0">Send</router-link>
       <router-link tag="button" class="btn btn-half" to="/receive">Receive</router-link>
@@ -73,6 +84,7 @@ export default {
     return {
       address: undefined,
       balances: [],
+      exits: [],
       latest: 0,
       synced: 0,
       ethBalance: '0',
@@ -91,12 +103,27 @@ export default {
   },
   methods: {
     async watchClient () {
+      // TODO: Figure out something better than this loop.
       try {
-        //await client.finalizeExits(this.address)
         this.ethBalance = await client.getEthBalance(this.address)
         this.balances = await client.getBalances(this.address)
         this.latest = await client.getCurrentBlock()
         this.synced = await client.getLastSyncedBlock()
+        await client.finalizeExits(this.address)
+
+        // TODO: Have this handled in a prettier way.
+        const currentEthBlock = await client.getCurrentEthBlock()
+        let exits = await client.getExits(this.address)
+        exits.forEach((exit) => {
+          const blocksLeft = Math.max((exit.block.toNumber() + 20) - currentEthBlock, 0)
+          const timeLeft = blocksLeft * 15
+          const minutes = Math.floor(timeLeft / 60)
+          exit.timeLeft = minutes >= 1 ? `~ ${minutes} minutes` : '<1 minute'
+        })
+        exits = exits.filter((exit) => {
+          return !exit.finalized
+        })
+        this.exits = exits
       } finally {
         await sleep(1000)
         this.watchClient()

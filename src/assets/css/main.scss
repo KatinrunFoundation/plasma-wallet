@@ -9,6 +9,21 @@
   src: url('../fonts/Roboto-Regular.ttf');
 }
 
+
+/* Animations */
+@keyframes rainbow { 
+  0%{
+    background-position: left;
+  }
+  50%{
+    background-position: right;
+  }
+  100%{
+    background-position: left;
+  }
+}
+
+
 /* Global Styles */
 body, html {
   padding: 0;
@@ -85,10 +100,10 @@ input, select {
 }
 
 .rainbow-background {
-  background: linear-gradient(to right, gold, aquamarine, crimson, orchid, blue);
+  background: linear-gradient(to right, gold, aquamarine, orchid, blue, gold);
   background-size: 200% 200%;
 
-  animation: rainbow 2s ease-in-out infinite;
+  animation: rainbow 10s ease-in-out infinite;
   transition: color .2s ease-in-out;
 }
 
