@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="top-bar">{{ address }}</div>
-    <div class="top-bar margin-bottom-small margin-bottom-sm" style="color:lightcoral">WARNING: ONLY DEPOSIT RINKEBY (TESTNET) ETH</div>
+    <div class="top-bar margin-bottom-sm" style="color:lightcoral">WARNING: ONLY DEPOSIT RINKEBY (TESTNET) ETH</div>
     <div class="mobile-sub-header">Receive</div>
 
     <div class="qr-container">

@@ -4,6 +4,8 @@ import Meta from 'vue-meta'
 import Router from 'vue-router'
 
 // External libraries.
+import Toasted from 'vue-toasted';
+import VueClipboard from 'vue-clipboard2'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 // Font Awesome icons.
@@ -22,6 +24,8 @@ import Send from './components/Send'
 
 Vue.use(Router)
 Vue.use(Meta)
+Vue.use(VueClipboard)
+Vue.use(Toasted)
 
 Vue.component('qrcode', VueQrcode)
 Vue.component('qrreader', QrcodeStream)
@@ -35,16 +39,17 @@ library.add(faSpinner)
 
 Vue.config.productionTip = false
 
+// Register routes.
 const routes = [
   { path: '/', component: Wallet },
   { path: '/receive', component: Receive },
   { path: '/send', component: Send }
 ]
-
 const router = new Router({
   routes
 })
 
+// Create the app.
 new Vue({
   render: h => h(App),
   router

@@ -193,7 +193,7 @@ input, select {
   width: 100%;
   display: block;
   height: 28px;
-  line-height: 28px;
+  line-height: 24px;
   font-size: 18px;
   text-align: center;
   text-transform: uppercase;
@@ -215,7 +215,7 @@ input, select {
   &.btn-small {
     font-size: 12px;
     height: 24px;
-    line-height: 24px
+    line-height: 20px
   }
 
   &:hover,

@@ -19,9 +19,11 @@
     "plasma-core": "github:plasma-group/plasma-core",
     "plasma-utils": "0.0.4-beta.2",
     "vue": "^2.5.22",
+    "vue-clipboard2": "^0.3.0",
     "vue-meta": "^1.5.8",
     "vue-qrcode-reader": "^1.3.4",
-    "vue-router": "^3.0.2"
+    "vue-router": "^3.0.2",
+    "vue-toasted": "^1.1.26"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",

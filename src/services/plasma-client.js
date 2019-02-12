@@ -142,6 +142,11 @@ class PlasmaClient {
   async getCurrentEthBlock () {
     return this.core.services.web3.eth.getBlockNumber()
   }
+
+  async getPrivateKey (address) {
+    const account = await this.core.services.wallet._getAccount(address)
+    return account.privateKey
+  }
 }
 
 const clientOptions = {

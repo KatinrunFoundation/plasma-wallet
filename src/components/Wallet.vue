@@ -63,8 +63,14 @@
     </div>
 
     <div class="card bottom">
-      <router-link tag="button" class="btn btn-half" to="/send" :disabled="balances.length === 0">Send</router-link>
-      <router-link tag="button" class="btn btn-half" to="/receive">Receive</router-link>
+      <div class="margin-bottom-sm">
+        <router-link tag="button" class="btn btn-half" to="/send" :disabled="balances.length === 0">Send</router-link>
+        <router-link tag="button" class="btn btn-half" to="/receive">Receive</router-link>
+      </div>
+      <div>
+        <button class="btn btn-half" v-clipboard:copy="privateKey" v-clipboard:success="onPkCopy">Copy Key</button>
+        <router-link tag="button" class="btn btn-half" to="/burn">Burn Key</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -83,6 +89,7 @@ export default {
   data () {
     return {
       address: undefined,
+      privateKey: undefined,
       balances: [],
       exits: [],
       latest: 0,
@@ -91,13 +98,15 @@ export default {
       amount: '',
       depositing: false,
       exiting: false,
-      working: false
+      working: false,
+      toasting: false
     }
   },
   beforeCreate () {
     (async () => {
       await client.start()
       this.address = await client.getAddress()
+      this.privateKey = await client.getPrivateKey(this.address)
       this.watchClient()
     })()
   },
@@ -156,6 +165,18 @@ export default {
         this.working = false
         this.cancel()
       }
+    },
+    onPkCopy () {
+      if (this.toasting) return
+      this.toasting = true
+      this.$toasted.show('Copied to clipboard!', {
+        position: 'bottom-center',
+        duration: 1000,
+        singleton: true,
+        onComplete: () => {
+          this.toasting = false
+        }
+      })
     }
   }
 }
