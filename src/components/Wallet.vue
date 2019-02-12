@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="top-bar">{{ address }}</div>
-    <div class=“top-bar” style=“color:red;”>WARNING: ONLY DEPOSIT RINKEBY (TESTNET) ETH</div>
+    <div class=“top-bar” style=“color:lightcolor;”>WARNING: ONLY DEPOSIT RINKEBY (TESTNET) ETH</div>
     <div class="top-bar margin-bottom-sm">
       <span v-if="synced !== latest">syncing... <font-awesome-icon icon="spinner" spin /></span>
       <span v-if="synced === latest">synced</span>
