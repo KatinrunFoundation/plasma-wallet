@@ -119,18 +119,6 @@ export default {
       try {
         this.ethBalance = await client.getEthBalance(this.address)
         this.currentEthBlock = await client.getCurrentEthBlock()
-      } finally {
-        await sleep(10000)
-        this.watchEth()
-      }
-    },
-    async watchClient () {
-      // TODO: Figure out something better than this loop.
-      try {
-        this.balances = await client.getBalances(this.address)
-        this.latest = await client.getCurrentBlock()
-        this.synced = await client.getLastSyncedBlock()
-        await client.finalizeExits(this.address)
 
         // TODO: Have this handled in a prettier way.
         let exits = await client.getExits(this.address)
@@ -144,6 +132,18 @@ export default {
           return !exit.finalized
         })
         this.exits = exits
+      } finally {
+        await sleep(10000)
+        this.watchEth()
+      }
+    },
+    async watchClient () {
+      // TODO: Figure out something better than this loop.
+      try {
+        this.balances = await client.getBalances(this.address)
+        this.latest = await client.getCurrentBlock()
+        this.synced = await client.getLastSyncedBlock()
+        await client.finalizeExits(this.address)
       } finally {
         await sleep(1000)
         this.watchClient()
