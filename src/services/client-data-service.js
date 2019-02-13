@@ -41,12 +41,16 @@ class ClientDataService {
     this.exits = []
     this.currentEthBlock = 0
     this.syncing = false
+    this.watching = false
   }
 
   /**
    * Starts watching for changes in the client.
    */
   async watch () {
+    if (this.watching) return
+    this.watching = true
+
     // Initial setup.
     await client.start()
     this.account = await client.getAccount()
@@ -107,9 +111,13 @@ class ClientDataService {
    */
   async _getExits () {
     let exits = await client.plasma.getExits(this.account.address)
+    
+    // Get rid of any finalized exits.
     exits = exits.filter((exit) => {
       return !exit.finalized
     })
+
+    // Add some additional data.
     for (const exit of exits) {
       const blocksLeft = Math.max((exit.block.toNumber() + 20) - this.currentEthBlock, 0)
       const timeLeft = blocksLeft * 15
@@ -117,6 +125,7 @@ class ClientDataService {
       exit.timeLeft = minutes >= 1 ? `~ ${minutes} minutes` : '<1 minute'
       exit.tokenName = TOKENS[exit.token] || exit.token
     }
+
     this.exits = exits
   }
 }
