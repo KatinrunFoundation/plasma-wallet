@@ -103,7 +103,7 @@ class PlasmaClient {
       account = await this.core.services.wallet._getAccount(address)
       this.setStoredAccount(account)
     } else {
-      await this.core.services.db.set('accounts', [account])
+      await this.core.services.db.set('accounts', [account.address])
       await this.core.services.db.set(`keystore:${account.address}`, account)
     }
 
