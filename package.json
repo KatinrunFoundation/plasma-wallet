@@ -1,6 +1,6 @@
 {
   "name": "plasma-burner",
-  "version": "0.0.1",
+  "version": "0.0.1-beta.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -16,7 +16,7 @@
     "bn.js": "^4.11.8",
     "idb": "^3.0.2",
     "plasma-contracts": "^0.0.4-beta.2",
-    "plasma-core": "github:plasma-group/plasma-core",
+    "plasma-core": "0.0.4-beta.33",
     "plasma-utils": "0.0.4-beta.2",
     "vue": "^2.5.22",
     "vue-clipboard2": "^0.3.0",
