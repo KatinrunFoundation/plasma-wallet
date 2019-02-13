@@ -1,4 +1,4 @@
-const { openDb } = require('idb')
+import { openDb, deleteDb } from 'idb';
 
 class IndexedBProvider {
   constructor () {
@@ -27,6 +27,10 @@ class IndexedBProvider {
     return openDb(this.dbname, 1, upgradeDB => {
       upgradeDB.createObjectStore(this.store)
     })
+  }
+
+  async _deleteDb () {
+    return deleteDb(this.dbname)
   }
 
   async get (key, fallback) {

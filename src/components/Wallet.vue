@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="top-bar">{{ address }}</div>
-    <div class="top-bar" style="color:lightcoral">WARNING: ONLY DEPOSIT RINKEBY (TESTNET) ETH</div>
+    <div class="top-bar danger">WARNING: ONLY DEPOSIT RINKEBY (TESTNET) ETH</div>
     <div class="top-bar margin-bottom-sm">
       <span v-if="synced !== latest">syncing... <font-awesome-icon icon="spinner" spin /></span>
       <span v-if="synced === latest">synced</span>
@@ -107,6 +107,7 @@ export default {
       await client.start()
       this.address = await client.getAddress()
       this.privateKey = await client.getPrivateKey(this.address)
+      await client.waitForContractInit()
       this.watchClient()
     })()
   },

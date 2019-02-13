@@ -59,6 +59,7 @@ export default {
     (async () => {
       await client.start()
       this.address = await client.getAddress()
+      await client.waitForContractInit()
       this.watchClient()
     })()
   },

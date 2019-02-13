@@ -121,6 +121,11 @@ input, select {
   bottom: 0;
 }
 
+.danger {
+  color: lightcoral;
+}
+
+
 /* Components */
 .container {
   position: relative;
@@ -216,6 +221,10 @@ input, select {
     font-size: 12px;
     height: 24px;
     line-height: 20px
+  }
+
+  &.btn-danger {
+    border-color: lightcoral;
   }
 
   &:hover,

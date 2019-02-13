@@ -18,6 +18,10 @@ const toHexString = (value) => {
   return new BigNum(value).toString('hex')
 }
 
+const resetDb = async () => {
+  const db = new IndexedDBProvider()
+  await db._deleteDb()
+}
 
 const defaultOptions = {
   dbProvider: IndexedDBProvider,
@@ -41,6 +45,7 @@ class PlasmaClient {
   async start () {
     if (this.started) return
     this.started = true
+    await this.handleUpgrade()
     await this.core.start()
   }
 
@@ -52,16 +57,52 @@ class PlasmaClient {
     await this.core.stop()
   }
 
+  async handleUpgrade () {
+    const latest = process.env.VERSION
+    const current = localStorage.getItem('version')
+    if (current === latest) return
+
+    const account = this.getStoredAccount()
+    await resetDb()
+    if (account) {
+      this.setStoredAccount(account)
+    }
+    localStorage.setItem('version', latest)
+  }
+
+  getStoredAccount () {
+    let account
+    try {
+      account = JSON.parse(localStorage.getItem('account'))
+    } catch (err) {
+      account = undefined
+    }
+    return account
+  }
+
+  setStoredAccount (account) {
+    localStorage.setItem('account', JSON.stringify(account))
+  }
+
+  async waitForContractInit () {
+    await this.core.services.contract.waitForInit()
+  }
+
   async getAddress() {
     if (this.address) return this.address
 
-    const accounts = await this.core.services.wallet.getAccounts()
-    if (accounts.length === 0) {
-      const account = await this.core.services.wallet.createAccount()
-      accounts.push(account)
+    let account = this.getStoredAccount()
+    if (!account) {
+      const address = await this.core.services.wallet.createAccount()
+      account = await this.core.services.wallet._getAccount(address)
+      this.setStoredAccount(account)
+    } else {
+      await this.core.services.db.set('accounts', [account])
+      await this.core.services.db.set(`keystore:${account.address}`, account)
     }
-    this.address = accounts[0]
-    return accounts[0]
+
+    this.address = account.address
+    return this.address
   }
 
   async getBalances(address) {
@@ -146,6 +187,13 @@ class PlasmaClient {
   async getPrivateKey (address) {
     const account = await this.core.services.wallet._getAccount(address)
     return account.privateKey
+  }
+
+  async burn () {
+    localStorage.removeItem('account')
+    await this.core.services.db.delete('accounts')
+    await this.core.services.db.delete(`keystore:${this.address}`)
+    this.address = undefined
   }
 }
 

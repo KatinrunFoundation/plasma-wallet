@@ -9,7 +9,14 @@ import VueClipboard from 'vue-clipboard2'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 // Font Awesome icons.
-import { faQrcode, faTimes, faArrowUp, faArrowDown, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import {
+  faQrcode,
+  faTimes,
+  faArrowUp,
+  faArrowDown,
+  faSpinner,
+  faExclamationTriangle
+} from '@fortawesome/free-solid-svg-icons'
 
 // External components.
 import VueQrcode from '@chenfengyuan/vue-qrcode'
@@ -21,6 +28,7 @@ import App from './App.vue'
 import Wallet from './components/Wallet'
 import Receive from './components/Receive'
 import Send from './components/Send'
+import Burn from './components/Burn'
 
 Vue.use(Router)
 Vue.use(Meta)
@@ -36,6 +44,7 @@ library.add(faTimes)
 library.add(faArrowUp)
 library.add(faArrowDown)
 library.add(faSpinner)
+library.add(faExclamationTriangle)
 
 Vue.config.productionTip = false
 
@@ -43,7 +52,8 @@ Vue.config.productionTip = false
 const routes = [
   { path: '/', component: Wallet },
   { path: '/receive', component: Receive },
-  { path: '/send', component: Send }
+  { path: '/send', component: Send },
+  { path: '/burn', component: Burn }
 ]
 const router = new Router({
   routes
