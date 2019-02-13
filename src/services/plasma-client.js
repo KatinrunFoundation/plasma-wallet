@@ -34,7 +34,7 @@ const defaultOptions = {
   walletProvider: PlasmaCore.providers.WalletProviders.LocalWalletProvider,
   contractProvider: PlasmaCore.providers.ContractProviders.ContractProvider,
   operatorProvider: PlasmaCore.providers.OperatorProviders.HttpOperatorProvider,
-  plasmaChainName: 'PG-beta.11',
+  plasmaChainName: 'PG-beta.12',
   registryAddress: '0x18d8BD44a01fb8D5f295a2B3Ab15789F26385df7'
 }
 
