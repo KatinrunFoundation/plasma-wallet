@@ -4,11 +4,6 @@
   src: url('../fonts/RobotoMono-Regular.ttf');
 }
 
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/Roboto-Regular.ttf');
-}
-
 
 /* Animations */
 @keyframes rainbow { 
@@ -35,7 +30,7 @@ body, html {
 
   scroll-behavior: smooth;
 
-  font-family: 'Roboto'
+  font-family: 'Roboto Mono', monospace;
 }
 
 a {
@@ -153,7 +148,6 @@ input, select {
   @include round(3px);
   @extend .shadow-1;
 
-  font-family: 'Roboto Mono', monospace;
   font-size: 12px;
 
   position: relative;
@@ -199,6 +193,7 @@ input, select {
   display: block;
   height: 28px;
   line-height: 24px;
+  font-family: 'Roboto Mono', monospace;
   font-size: 18px;
   text-align: center;
   text-transform: uppercase;
@@ -270,7 +265,6 @@ input, select {
 .top-bar {
   text-align: center;
   font-size: 12px;
-  font-family: 'Roboto Mono';
 
   background-color: #FBFBFB;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -286,7 +280,6 @@ input, select {
     display: block;
     text-transform: uppercase;
     font-size: 12px;
-    font-family: 'Roboto Mono';
   }
 
   input {
