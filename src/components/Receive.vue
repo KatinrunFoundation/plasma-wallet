@@ -6,27 +6,21 @@
     <div class="qr-container">
       <font-awesome-icon class="close-btn" icon="times" v-on:click="back()" />
       <div class="text-center">
-        <qrcode v-bind:value="address" :options="{ width: 300, color: { light: '#FBFBFBff' } }"></qrcode>
+        <qrcode v-bind:value="account.address" :options="{ width: 300, color: { light: '#FBFBFBff' } }"></qrcode>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import client from '../services/plasma-client'
+import clientData from '../services/client-data-service'
 
 export default {
   name: 'Receive',
-  data () {
-    return {
-      address: undefined
+  computed: {
+    account () {
+      return clientData.account
     }
-  },
-  beforeCreate() {
-    (async () => {
-      await client.start()
-      this.address = await client.getAddress()
-    })()
   },
   methods: {
     back () {
