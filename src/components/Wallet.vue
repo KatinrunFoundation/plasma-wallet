@@ -99,7 +99,8 @@ export default {
       exiting: false,
       working: false,
       toasting: false,
-      version: process.env.VERSION
+      version: process.env.VERSION,
+      currentEthBlock: 0
     }
   },
   beforeCreate () {
@@ -108,24 +109,33 @@ export default {
       this.address = await client.getAddress()
       this.privateKey = await client.getPrivateKey(this.address)
       await client.waitForContractInit()
+      this.currentEthBlock = await client.getCurrentEthBlock()
       this.watchClient()
+      this.watchEth()
     })()
   },
   methods: {
+    async watchEth () {
+      try {
+        this.ethBalance = await client.getEthBalance(this.address)
+        this.currentEthBlock = await client.getCurrentEthBlock()
+      } finally {
+        await sleep(10000)
+        this.watchEth()
+      }
+    },
     async watchClient () {
       // TODO: Figure out something better than this loop.
       try {
-        this.ethBalance = await client.getEthBalance(this.address)
         this.balances = await client.getBalances(this.address)
         this.latest = await client.getCurrentBlock()
         this.synced = await client.getLastSyncedBlock()
         await client.finalizeExits(this.address)
 
         // TODO: Have this handled in a prettier way.
-        const currentEthBlock = await client.getCurrentEthBlock()
         let exits = await client.getExits(this.address)
         exits.forEach((exit) => {
-          const blocksLeft = Math.max((exit.block.toNumber() + 20) - currentEthBlock, 0)
+          const blocksLeft = Math.max((exit.block.toNumber() + 20) - this.currentEthBlock, 0)
           const timeLeft = blocksLeft * 15
           const minutes = Math.floor(timeLeft / 60)
           exit.timeLeft = minutes >= 1 ? `~ ${minutes} minutes` : '<1 minute'
