@@ -1,7 +1,6 @@
 <template>
   <div>
-    <div class="top-bar">{{ address }}</div>
-    <div class="top-bar margin-bottom-sm danger">WARNING: ONLY DEPOSIT RINKEBY (TESTNET) ETH</div>
+    <top-bar></top-bar>
     <div class="mobile-sub-header">Receive</div>
 
     <div class="qr-container">

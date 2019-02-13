@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!scanning">
-      <div class="top-bar margin-bottom-sm">{{ address }}</div>
+      <top-bar></top-bar>
       <div class="mobile-sub-header">Send to Address</div>
 
       <div class="container">

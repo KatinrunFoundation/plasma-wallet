@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="top-bar margin-bottom-sm">{{ address }}</div>
+    <top-bar></top-bar>
     <div class="mobile-sub-header">Burn</div>
 
     <div class="container">

@@ -29,6 +29,7 @@ import Wallet from './components/Wallet'
 import Receive from './components/Receive'
 import Send from './components/Send'
 import Burn from './components/Burn'
+import TopBar from './components/TopBar'
 
 Vue.use(Router)
 Vue.use(Meta)
@@ -38,6 +39,7 @@ Vue.use(Toasted)
 Vue.component('qrcode', VueQrcode)
 Vue.component('qrreader', QrcodeStream)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('top-bar', TopBar)
 
 library.add(faQrcode)
 library.add(faTimes)

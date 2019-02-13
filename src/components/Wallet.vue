@@ -1,7 +1,6 @@
 <template>
   <div>
-    <div class="top-bar">{{ address }}</div>
-    <div class="top-bar danger">WARNING: ONLY DEPOSIT RINKEBY (TESTNET) ETH</div>
+    <top-bar></top-bar>
     <div class="top-bar margin-bottom-sm">
       <span v-if="synced !== latest">syncing... <font-awesome-icon icon="spinner" spin /></span>
       <span v-if="synced === latest">synced</span>
@@ -99,7 +98,8 @@ export default {
       depositing: false,
       exiting: false,
       working: false,
-      toasting: false
+      toasting: false,
+      version: process.env.VERSION
     }
   },
   beforeCreate () {
