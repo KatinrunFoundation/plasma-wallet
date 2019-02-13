@@ -19,8 +19,7 @@ export default {
   },
   mounted () {
     (async () => {
-      await client.start()
-      this.address = await client.getAddress()
+      this.address = await client.waitForAddress()
     })()
   },
 }

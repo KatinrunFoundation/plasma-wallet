@@ -23,6 +23,12 @@ const resetDb = async () => {
   await db._deleteDb()
 }
 
+const sleep = async (ms) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
 const defaultOptions = {
   dbProvider: IndexedDBProvider,
   walletProvider: PlasmaCore.providers.WalletProviders.LocalWalletProvider,
@@ -119,6 +125,13 @@ class PlasmaClient {
     return parsed
   }
 
+  async waitForAddress () {
+    while (!this.address) {
+      await sleep(100)
+    }
+    return this.address
+  }
+
   async getCurrentBlock () {
     return this.core.services.contract.getCurrentBlock()
   }
@@ -199,7 +212,7 @@ class PlasmaClient {
 
 const clientOptions = {
   finalityDepth: 0,
-  debug: 'service:*, debug:*',
+  debug: 'service:*, debug:*, core:*',
   ethereumEndpoint: 'https://rinkeby.infura.io/v3/fce31f1fb2d54caa9b31ed7d28437fa5',
 }
 const client = new PlasmaClient(clientOptions)
