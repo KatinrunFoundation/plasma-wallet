@@ -2,8 +2,8 @@
   <div>
     <top-bar></top-bar>
     <div class="top-bar margin-bottom-sm">
-      <span v-if="synced !== latest">syncing... <font-awesome-icon icon="spinner" spin /></span>
-      <span v-if="synced === latest">synced</span>
+      <span v-if="syncing">syncing... <font-awesome-icon icon="spinner" spin /></span>
+      <span v-if="!syncing">synced</span>
     </div>
 
     <div class="mobile-sub-header">ETH Balance</div>  
@@ -67,7 +67,7 @@
         <router-link tag="button" class="btn btn-half" to="/receive">Receive</router-link>
       </div>
       <div>
-        <button class="btn btn-half" v-clipboard:copy="privateKey" v-clipboard:success="onPkCopy">Copy Key</button>
+        <button class="btn btn-half" v-clipboard:copy="account.privateKey" v-clipboard:success="onPkCopy">Copy Key</button>
         <router-link tag="button" class="btn btn-half" to="/burn">Burn Key</router-link>
       </div>
     </div>
@@ -75,80 +75,39 @@
 </template>
 
 <script>
-import client from '../services/plasma-client'
-
-const sleep = async (ms) => {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms)
-  })
-}
+import client from '../services/client-service'
+import clientData from '../services/client-data-service'
 
 export default {
   name: 'Wallet',
   data () {
     return {
-      address: undefined,
-      privateKey: undefined,
-      balances: [],
-      exits: [],
-      latest: 0,
-      synced: 0,
-      ethBalance: '0',
+      clientData: clientData,
       amount: '',
       depositing: false,
       exiting: false,
       working: false,
-      toasting: false,
-      version: process.env.VERSION,
-      currentEthBlock: 0
+      toasting: false
     }
   },
-  beforeCreate () {
-    (async () => {
-      await client.start()
-      this.address = await client.getAddress()
-      this.privateKey = await client.getPrivateKey(this.address)
-      await client.waitForContractInit()
-      this.currentEthBlock = await client.getCurrentEthBlock()
-      this.watchClient()
-      this.watchEth()
-    })()
+  computed: {
+    account () {
+      return clientData.account
+    },
+    ethBalance () {
+      return clientData.ethBalance
+    },
+    balances () {
+      return clientData.balances
+    },
+    exits () {
+      return clientData.exits
+    },
+    syncing () {
+      return clientData.syncing
+    }
   },
   methods: {
-    async watchEth () {
-      try {
-        this.ethBalance = await client.getEthBalance(this.address)
-        this.currentEthBlock = await client.getCurrentEthBlock()
-
-        // TODO: Have this handled in a prettier way.
-        let exits = await client.getExits(this.address)
-        exits.forEach((exit) => {
-          const blocksLeft = Math.max((exit.block.toNumber() + 20) - this.currentEthBlock, 0)
-          const timeLeft = blocksLeft * 15
-          const minutes = Math.floor(timeLeft / 60)
-          exit.timeLeft = minutes >= 1 ? `~ ${minutes} minutes` : '<1 minute'
-        })
-        exits = exits.filter((exit) => {
-          return !exit.finalized
-        })
-        this.exits = exits
-      } finally {
-        await sleep(10000)
-        this.watchEth()
-      }
-    },
-    async watchClient () {
-      // TODO: Figure out something better than this loop.
-      try {
-        this.balances = await client.getBalances(this.address)
-        this.latest = await client.getCurrentBlock()
-        this.synced = await client.getLastSyncedBlock()
-        await client.finalizeExits(this.address)
-      } finally {
-        await sleep(1000)
-        this.watchClient()
-      }
-    },
     startDeposit () {
       this.depositing = true
     },
@@ -162,7 +121,7 @@ export default {
     async deposit () {
       this.working = true
       try {
-        await client.deposit(this.address, 0, this.amount)
+        await client.plasma.deposit(this.account.address, 0, this.amount)
       } finally {
         this.working = false
         this.cancel()
@@ -171,15 +130,17 @@ export default {
     async exit () {
       this.working = true
       try {
-        await client.exit(this.address, 0, this.amount)
+        await client.plasma.startExit(this.account.address, 0, this.amount)
       } finally {
         this.working = false
         this.cancel()
       }
     },
     onPkCopy () {
+      // Hack to prevent displaying duplicate toasts.
       if (this.toasting) return
       this.toasting = true
+
       this.$toasted.show('Copied to clipboard!', {
         position: 'bottom-center',
         duration: 1000,

@@ -35,33 +35,26 @@
 </template>
 
 <script>
-import client from '../services/plasma-client'
-
-const sleep = async (ms) => {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms)
-  })
-}
+import client from '../services/client-service'
+import clientData from '../services/client-data-service'
 
 export default {
   name: 'Receive',
   data () {
     return {
-      address: undefined,
       scanning: false,
       recipient: '',
       token: '',
-      amount: '',
-      balances: []
+      amount: ''
     }
   },
-  beforeCreate() {
-    (async () => {
-      await client.start()
-      this.address = await client.getAddress()
-      await client.waitForContractInit()
-      this.watchClient()
-    })()
+  computed: {
+    account () {
+      return clientData.account
+    },
+    balances () {
+      return clientData.balances
+    }
   },
   methods: {
     onDecode (decoded) {
@@ -74,20 +67,9 @@ export default {
     stopScan () {
       this.scanning = false
     },
-    async watchClient () {
-      try {
-        this.balances = await client.getBalances(this.address)
-        if (this.token === '') {
-          this.token = this.balances[0].id
-        }
-      } finally {
-        await sleep(1000)
-        this.watchClient()
-      }
-    },
     async sendTransaction () {
-      await client.sendTransaction(this.address, this.recipient, this.token, this.amount)
-      this.$router.push('/')
+      await client.plasma.sendTransaction(this.account.address, this.recipient, this.token, this.amount)
+      this.back()
     },
     back () {
       this.$router.go(-1)

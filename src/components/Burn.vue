@@ -21,29 +21,17 @@
 </template>
 
 <script>
-import client from '../services/plasma-client'
+import client from '../services/client-service'
 
 export default {
   name: 'Burn',
-  data () {
-    return {
-      address: undefined
-    }
-  },
-  beforeCreate() {
-    (async () => {
-      await client.start()
-      this.address = await client.getAddress()
-    })()
-  },
   methods: {
+    async burn () {
+      await client.resetAccount()
+      this.back()
+    },
     back () {
       this.$router.go(-1)
-    },
-    async burn () {
-      await client.burn()
-      this.address = await client.getAddress()
-      this.back()
     }
   }
 }

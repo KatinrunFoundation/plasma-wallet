@@ -1,26 +1,24 @@
 <template>
   <div>
     <div class="top-bar">Plasma Burner Wallet v{{ version }}</div>
-    <div class="top-bar">{{ address }}</div>
+    <div class="top-bar">{{ account.address }}</div>
     <div class="top-bar danger">WARNING: ONLY DEPOSIT RINKEBY (TESTNET) ETH</div>
   </div>
 </template>
 
 <script>
-import client from '../services/plasma-client'
+import clientData from '../services/client-data-service'
+import versionManager from '../services/plasma-client/version-manager'
 
 export default {
   name: 'TopBar',
-  data () {
-    return {
-      address: undefined,
-      version: process.env.VERSION
+  computed: {
+    version () {
+      return versionManager.getCurrentVersion()
+    },
+    account () {
+      return clientData.account
     }
-  },
-  mounted () {
-    (async () => {
-      this.address = await client.waitForAddress()
-    })()
-  },
+  }
 }
 </script>
