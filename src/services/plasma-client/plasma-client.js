@@ -75,16 +75,6 @@ class BrowserPlasmaClient extends EventEmitter {
   }
 
   /**
-   * Waits for the smart contract to be initialized.
-   * Resolves once the contract address has been detected
-   * from the plasma chain registry.
-   * @return {Promise} Promise that resolves when the contract is ready.
-   */
-  async waitForContractInit () {
-    return this.core.services.contract.waitForInit()
-  }
-
-  /**
    * Creates a new account.
    * @return {Account} An Ethereum account.
    */
@@ -122,19 +112,6 @@ class BrowserPlasmaClient extends EventEmitter {
    */
   getAccount() {
     return this.account
-  }
-
-  // TODO: Make these RPC calls in core.
-  async getLastSyncedBlock () {
-    return this.core.services.chaindb.getLatestBlock()
-  }
-
-  async getEthBalance (address) {
-    return this.core.services.web3.eth.getBalance(address)
-  }
-  
-  async getCurrentEthBlock () {
-    return this.core.services.web3.eth.getBlockNumber()
   }
 }
 

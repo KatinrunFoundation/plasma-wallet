@@ -54,7 +54,7 @@ class ClientDataService {
     // Initial setup.
     await client.start()
     this.account = await client.getAccount()
-    await client.waitForContractInit()
+    await this._waitForContractInit()
 
     // Start watching things.
     syncInterval(this._fastWatchCheck.bind(this), 1000)
@@ -62,11 +62,20 @@ class ClientDataService {
   }
 
   /**
+   * Resolves once the contract is initialized.
+   */
+  async _waitForContractInit () {
+    return new Promise((resolve) => {
+      client.on('contract:initialized', resolve)
+    })
+  }
+
+  /**
    * Series of checks triggered occasionally.
    */
   async _slowWatchCheck () {
-    this.ethBalance = await client.getEthBalance(this.account.address)
-    this.currentEthBlock = await client.getCurrentEthBlock()
+    this.ethBalance = await client.plasma.getEthBalance(this.account.address)
+    this.currentEthBlock = await client.plasma.getCurrentEthBlock()
     await this._getExits()
   }
 
@@ -85,7 +94,7 @@ class ClientDataService {
    */
   async _getSyncStatus () {
     const currentBlock = await client.plasma.getCurrentBlock()
-    const lastSyncedBlock = await client.getLastSyncedBlock()
+    const lastSyncedBlock = await client.plasma.getLastSyncedBlock()
     this.syncing = currentBlock !== lastSyncedBlock
   }
 

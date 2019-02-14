@@ -1,7 +1,10 @@
-import { openDb, deleteDb } from 'idb';
+import { openDb, deleteDb } from 'idb'
+import { EventEmitter } from 'events'
 
-class IndexedBProvider {
+class IndexedBProvider extends EventEmitter {
   constructor () {
+    super()
+
     this.dbname = 'test-store'
     this.store = 'chain'
   }
