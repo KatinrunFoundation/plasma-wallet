@@ -1,10 +1,6 @@
 <template>
   <div>
     <top-bar></top-bar>
-    <div class="top-bar margin-bottom-sm">
-      <span v-if="syncing">syncing... <font-awesome-icon icon="spinner" spin /></span>
-      <span v-if="!syncing">synced</span>
-    </div>
 
     <div class="mobile-sub-header">ETH Balance</div>  
     <div class="card">
@@ -102,9 +98,6 @@ export default {
     },
     exits () {
       return clientData.exits
-    },
-    syncing () {
-      return clientData.syncing
     }
   },
   methods: {

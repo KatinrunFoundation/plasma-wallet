@@ -3,6 +3,10 @@
     <div class="top-bar">Plasma Burner Wallet v{{ version }}</div>
     <div class="top-bar">{{ account.address }}</div>
     <div class="top-bar danger">WARNING: ONLY DEPOSIT RINKEBY (TESTNET) ETH</div>
+    <div class="top-bar margin-bottom-sm">
+      <span v-if="syncing">syncing... <font-awesome-icon icon="spinner" spin /></span>
+      <span v-if="!syncing">synced</span>
+    </div>
   </div>
 </template>
 
@@ -18,6 +22,9 @@ export default {
     },
     account () {
       return clientData.account
+    },
+    syncing () {
+      return clientData.syncing
     }
   }
 }
