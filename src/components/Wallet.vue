@@ -91,7 +91,7 @@ export default {
       return clientData.account
     },
     ethBalance () {
-      return clientData.ethBalance
+      return clientData.ethBalance.toString(10)
     },
     balances () {
       return clientData.balances

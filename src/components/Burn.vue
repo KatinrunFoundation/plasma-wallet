@@ -22,12 +22,14 @@
 
 <script>
 import client from '../services/client-service'
+import clientData from '../services/client-data-service'
 
 export default {
   name: 'Burn',
   methods: {
     async burn () {
       await client.resetAccount()
+      await clientData.forceRefresh()
       this.back()
     },
     back () {

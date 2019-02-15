@@ -45,6 +45,14 @@ class ClientDataService {
   }
 
   /**
+   * Forces the client to refresh all values.
+   */
+  async forceRefresh () {
+    this._fastWatchCheck()
+    this._slowWatchCheck()
+  }
+
+  /**
    * Starts watching for changes in the client.
    */
   async watch () {
@@ -60,6 +68,9 @@ class ClientDataService {
     this.account = await client.getAccount()
   }
 
+  /**
+   * Starts all watch intervals.
+   */
   async _startWatchIntervals () {
     syncInterval(this._fastWatchCheck.bind(this), 1000)
     syncInterval(this._slowWatchCheck.bind(this), 10000)
