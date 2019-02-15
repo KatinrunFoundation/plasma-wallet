@@ -40,7 +40,7 @@ class ClientDataService {
     this.balances = []
     this.exits = []
     this.currentEthBlock = 0
-    this.syncing = false
+    this.syncing = true
     this.watching = false
   }
 
@@ -51,23 +51,18 @@ class ClientDataService {
     if (this.watching) return
     this.watching = true
 
+    client.core.services.contract.on('initialized', () => {
+      this._startWatchIntervals()
+    })
+
     // Initial setup.
     await client.start()
     this.account = await client.getAccount()
-    await this._waitForContractInit()
-
-    // Start watching things.
-    syncInterval(this._fastWatchCheck.bind(this), 1000)
-    syncInterval(this._slowWatchCheck.bind(this), 10000)
   }
 
-  /**
-   * Resolves once the contract is initialized.
-   */
-  async _waitForContractInit () {
-    return new Promise((resolve) => {
-      client.on('contract:initialized', resolve)
-    })
+  async _startWatchIntervals () {
+    syncInterval(this._fastWatchCheck.bind(this), 1000)
+    syncInterval(this._slowWatchCheck.bind(this), 10000)
   }
 
   /**
