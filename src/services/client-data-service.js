@@ -48,8 +48,9 @@ class ClientDataService {
    * Forces the client to refresh all values.
    */
   async forceRefresh () {
-    this._fastWatchCheck()
-    this._slowWatchCheck()
+    this.account = await client.getAccount()
+    await this._slowWatchCheck()
+    await this._fastWatchCheck()
   }
 
   /**
@@ -115,7 +116,7 @@ class ClientDataService {
       parsed.push({
         id: token,
         token: tokenName,
-        balance: balances[token].toString()
+        balance: balances[token].toString(10)
       })
     }
     this.balances = parsed

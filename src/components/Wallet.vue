@@ -114,7 +114,7 @@ export default {
     async deposit () {
       this.working = true
       try {
-        await client.plasma.deposit(this.account.address, 0, this.amount)
+        await client.plasma.deposit(0, this.amount, this.account.address)
       } finally {
         this.working = false
         this.cancel()

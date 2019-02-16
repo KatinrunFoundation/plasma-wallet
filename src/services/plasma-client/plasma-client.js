@@ -40,6 +40,7 @@ class BrowserPlasmaClient extends EventEmitter {
 
     // Load an account or create a new one.
     this.account = accountStore.getStoredAccount() || await this.resetAccount()
+    await this.storeAccount(this.account)
 
     this.emit('started')
   }

@@ -4,7 +4,7 @@
       <top-bar></top-bar>
       <div class="mobile-sub-header">Send to Address</div>
 
-      <div class="container">
+      <div class="container" v-if="!sending">
         <font-awesome-icon class="back-btn" icon="times" v-on:click="back()" />
         <div class="input-field">
           <label>Token to Send</label>
@@ -25,6 +25,9 @@
         </div>
         <button class="btn" v-on:click="sendTransaction()">send</button>
       </div>
+      <div class="card text-center" v-if="sending">
+        making your dreams a reality... <font-awesome-icon icon="spinner" spin />
+      </div>
     </div>
 
     <div v-if="scanning">
@@ -43,6 +46,7 @@ export default {
   data () {
     return {
       scanning: false,
+      sending: false,
       recipient: '',
       token: '',
       amount: ''
@@ -68,7 +72,9 @@ export default {
       this.scanning = false
     },
     async sendTransaction () {
+      this.sending = true
       await client.plasma.sendTransaction(this.account.address, this.recipient, this.token, this.amount)
+      this.sending = false
       this.back()
     },
     back () {
