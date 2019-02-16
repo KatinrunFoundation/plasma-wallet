@@ -27,7 +27,8 @@ const syncInterval = async (fn, ms) => {
 }
 
 const TOKENS = {
-  '0': 'ETH'
+  '0': 'ETH',
+  '1': 'TORCH'
 }
 
 /**
