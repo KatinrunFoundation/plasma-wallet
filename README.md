@@ -51,9 +51,9 @@ npm run serve
 ```
 
 ### Building
-We're using `gulp` to provide a process to build `plasma-js-lib` for in-browser usage.
+`Vue.js` provides a simple way to build `plasma-burner` for in-browser usage.
 
-If you'd like to build `plasma-js-lib` yourself, simply run:
+If you'd like to build `plasma-burner` yourself, simply run:
 
 ```
 npm run build
