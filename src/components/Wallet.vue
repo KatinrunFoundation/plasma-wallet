@@ -62,9 +62,12 @@
         <router-link tag="button" class="btn btn-half" to="/send" :disabled="balances.length === 0">Send</router-link>
         <router-link tag="button" class="btn btn-half" to="/receive">Receive</router-link>
       </div>
-      <div>
+      <div class="margin-bottom-sm">
         <button class="btn btn-half" v-clipboard:copy="account.privateKey" v-clipboard:success="onPkCopy">Copy Key</button>
         <router-link tag="button" class="btn btn-half" to="/burn">Burn Key</router-link>
+      </div>
+      <div>
+        <router-link tag="button" class="btn btn-whole" to="/settings">Settings</router-link>
       </div>
     </div>
   </div>

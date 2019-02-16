@@ -30,6 +30,7 @@ import Receive from './components/Receive'
 import Send from './components/Send'
 import Burn from './components/Burn'
 import TopBar from './components/TopBar'
+import Settings from './components/Settings'
 
 Vue.use(Router)
 Vue.use(Meta)
@@ -55,7 +56,8 @@ const routes = [
   { path: '/', component: Wallet },
   { path: '/receive', component: Receive },
   { path: '/send', component: Send },
-  { path: '/burn', component: Burn }
+  { path: '/burn', component: Burn },
+  { path: '/settings', component: Settings }
 ]
 const router = new Router({
   routes

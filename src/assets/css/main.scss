@@ -69,10 +69,15 @@ input, select {
   border-radius: $radius;
 }
 
+
 /* Utilities */
 .shadow-1 {
   -webkit-box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.01), 0 1px 10px 0 rgba(0, 0, 0, 0.01), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
           box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.01), 0 1px 10px 0 rgba(0, 0, 0, 0.01), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.no-margin {
+  margin: 0 !important;
 }
 
 .ellipsis {
@@ -203,6 +208,12 @@ input, select {
   &.btn-half {
     width: calc(46% - 2px);
     margin: 0 2%;
+    display: inline-block;
+  }
+
+  &.btn-whole {
+    margin: 0 2%;
+    width: calc(96% - 2px);
     display: inline-block;
   }
 
