@@ -31,6 +31,7 @@ import Send from './components/Send'
 import Burn from './components/Burn'
 import TopBar from './components/TopBar'
 import Settings from './components/Settings'
+import Advanced from './components/Advanced'
 
 Vue.use(Router)
 Vue.use(Meta)
@@ -57,7 +58,8 @@ const routes = [
   { path: '/receive', component: Receive },
   { path: '/send', component: Send },
   { path: '/burn', component: Burn },
-  { path: '/settings', component: Settings }
+  { path: '/settings', component: Settings },
+  { path: '/advanced', component: Advanced }
 ]
 const router = new Router({
   routes

@@ -62,12 +62,9 @@
         <router-link tag="button" class="btn btn-half" to="/send" :disabled="balances.length === 0">Send</router-link>
         <router-link tag="button" class="btn btn-half" to="/receive">Receive</router-link>
       </div>
-      <div class="margin-bottom-sm">
-        <button class="btn btn-half" v-clipboard:copy="account.privateKey" v-clipboard:success="onPkCopy">Copy Key</button>
-        <router-link tag="button" class="btn btn-half" to="/burn">Burn Key</router-link>
-      </div>
       <div>
-        <router-link tag="button" class="btn btn-whole" to="/settings">Settings</router-link>
+        <router-link tag="button" class="btn btn-half" to="/settings">Settings</router-link>
+        <router-link tag="button" class="btn btn-half" to="/advanced">Advanced</router-link>
       </div>
     </div>
   </div>
@@ -81,7 +78,6 @@ export default {
   name: 'Wallet',
   data () {
     return {
-      clientData: clientData,
       amount: '',
       depositing: false,
       exiting: false,
@@ -131,20 +127,6 @@ export default {
         this.working = false
         this.cancel()
       }
-    },
-    onPkCopy () {
-      // Hack to prevent displaying duplicate toasts.
-      if (this.toasting) return
-      this.toasting = true
-
-      this.$toasted.show('Copied to clipboard!', {
-        position: 'bottom-center',
-        duration: 1000,
-        singleton: true,
-        onComplete: () => {
-          this.toasting = false
-        }
-      })
     }
   }
 }
