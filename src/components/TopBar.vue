@@ -16,15 +16,37 @@ import versionManager from '../services/plasma-client/version-manager'
 
 export default {
   name: 'TopBar',
+  data () {
+    return {
+      refreshval: 1
+    }
+  },
+  beforeMount () {
+    setInterval(() => {
+      this.refreshval = Math.random()
+    }, 1000)
+  },
   computed: {
     version () {
-      return versionManager.getCurrentVersion()
+      if (this.refreshval) {
+        return versionManager.getCurrentVersion()
+      } else {
+        return versionManager.getCurrentVersion()
+      }
     },
     account () {
-      return clientData.account
+      if (this.refreshval) {
+        return clientData.account
+      } else {
+        return clientData.account
+      }
     },
     syncing () {
-      return clientData.syncing
+      if (this.refreshval) {
+        return clientData.syncing
+      } else {
+        return clientData.syncing
+      }
     }
   }
 }

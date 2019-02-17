@@ -1,4 +1,6 @@
 import client from './client-service'
+import operator from './operator/operator'
+import BigNum from 'bn.js'
 
 /**
  * "Sleeps" for a given period of time.
@@ -43,6 +45,7 @@ class ClientDataService {
     this.currentEthBlock = 0
     this.syncing = true
     this.watching = false
+    this.channel = undefined
   }
 
   /**
@@ -68,6 +71,7 @@ class ClientDataService {
     // Initial setup.
     await client.start()
     this.account = await client.getAccount()
+    await operator.init(this.account.address)
   }
 
   /**
@@ -82,9 +86,11 @@ class ClientDataService {
    * Series of checks triggered occasionally.
    */
   async _slowWatchCheck () {
-    this.ethBalance = await client.plasma.getEthBalance(this.account.address)
-    this.currentEthBlock = await client.plasma.getCurrentEthBlock()
-    await this._getExits()
+    // this.ethBalance = await client.plasma.getEthBalance(this.account.address)
+    // this.currentEthBlock = await client.plasma.getCurrentEthBlock()
+    // await this._getExits()
+    await this._getBalances()
+    await this._getChannels()
   }
 
   /**
@@ -92,9 +98,8 @@ class ClientDataService {
    */
   async _fastWatchCheck () {
     this.account = await client.getAccount()
-    await this._getBalances()
     await this._getSyncStatus()
-    await client.plasma.finalizeExits(this.account.address)
+    // await client.plasma.finalizeExits(this.account.address)
   }
 
   /**
@@ -110,17 +115,26 @@ class ClientDataService {
    * Queries and parses the user's balances.
    */
   async _getBalances () {
-    const balances = await client.plasma.getBalances(this.account.address)
-    const parsed = []
-    for (const token in balances) {
-      const tokenName = TOKENS[token] || token
-      parsed.push({
-        id: token,
-        token: tokenName,
-        balance: balances[token].toString(10)
-      })
+    const ownedRanges = await operator.getOwnedRanges(this.account.address)
+    let sum = 0;
+    for (const range of ownedRanges) {
+      sum += (range.typedEnd - range.typedStart)
     }
-    this.balances = parsed
+
+    const balances = [
+      {
+        id: '0',
+        token: 'ETH',
+        balance: new BigNum(sum)
+      }
+    ]
+
+    this.balances = balances
+  }
+
+  async _getChannels () {
+    const openChannel = await operator.getOpenChannels(this.account.address)
+    this.channel = openChannel
   }
 
   /**

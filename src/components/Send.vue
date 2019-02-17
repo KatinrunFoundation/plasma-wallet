@@ -38,8 +38,9 @@
 </template>
 
 <script>
-import client from '../services/client-service'
+import operator from '../services/operator/operator'
 import clientData from '../services/client-data-service'
+import transferPredicate from '../services/predicates/range-transfer'
 
 export default {
   name: 'Receive',
@@ -73,9 +74,12 @@ export default {
     },
     async sendTransaction () {
       this.sending = true
-      await client.plasma.sendTransaction(this.account.address, this.recipient, this.token, this.amount)
+      const transaction = transferPredicate.createTransaction(0, 100, this.recipient)
+      const witness = transferPredicate.createWitness(this.account, 0, 100)
+      await operator.sendTransaction(transaction, witness)
       this.sending = false
       this.back()
+      this.$forceUpdate()
     },
     back () {
       this.$router.go(-1)
