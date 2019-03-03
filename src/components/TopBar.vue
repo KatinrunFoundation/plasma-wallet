@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div class="logo">
+      <img src="https://ipfs.infura.io/ipfs/QmZ1ZFEPt6eQcYZSMX6umB8AzFwQt7kSaptHGMs3QNfk7f">
+    </div>
+    <div id="nav">
+      <a href="http://krplasma.kulap.io" class="active">Wallet</a> |
+      <a href="http://krplasma.kulap.io:8080">Explorer</a>
+    </div>
     <div class="top-bar">Plasma Burner Wallet v{{ version }}</div>
     <div class="top-bar">{{ account.address }}</div>
     <div class="top-bar danger">WARNING: ONLY DEPOSIT RINKEBY (TESTNET) ETH</div>
@@ -29,3 +36,26 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.logo {
+  text-align: center;
+  margin-top: 22px;
+}
+.logo img {
+  height: 80px;
+}
+#nav {
+  padding: 30px;
+  text-align: center;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.active {
+  color: #42b983;
+}
+</style>
