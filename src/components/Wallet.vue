@@ -69,6 +69,7 @@
       <div>
         <router-link tag="button" class="btn btn-whole" to="/settings">Settings</router-link>
       </div>
+      <Footer></Footer>
     </div>
   </div>
 </template>
@@ -76,6 +77,7 @@
 <script>
 import client from '../services/client-service'
 import clientData from '../services/client-data-service'
+import Footer from '@/components/Footer'
 
 export default {
   name: 'Wallet',
@@ -88,6 +90,9 @@ export default {
       working: false,
       toasting: false
     }
+  },
+  components: {
+    Footer
   },
   computed: {
     account () {
